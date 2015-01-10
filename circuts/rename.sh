@@ -24,6 +24,9 @@ cp $PRJ-B_SilkS.pho   $PRJ/$PRJ.GBO
 cp $PRJ.drl           $PRJ/$PRJ.TXT
 cp $PRJ-Edge_Cuts.pho $PRJ/$PRJ.GKO
 
+rm $PRJ.zip
+zip -r $PRJ.zip $PRJ
+
 #cp $PRJ-Front.gtl $PRJ/$PRJ.GTL
 #cp $PRJ-Back.gbl  $PRJ/$PRJ.GBL
 #cp $PRJ-F_Paste.gtp $PRJ/$PRJ.GTS
