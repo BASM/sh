@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Сб 10 янв 2015 19:25:17
+Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Сб 10 янв 2015 20:15:01
 
 BeginCmp
 TimeStamp = /53B453A6;
@@ -45,15 +45,22 @@ EndCmp
 BeginCmp
 TimeStamp = /54B14024;
 Reference = P4;
-ValeurCmp = CONN_8;
+ValeurCmp = Relay GND;
 IdModule  = SIL-8;
 EndCmp
 
 BeginCmp
 TimeStamp = /54B14265;
 Reference = P5;
-ValeurCmp = CONN_8;
+ValeurCmp = Relay 5V;
 IdModule  = SIL-8;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B15EA0;
+Reference = P6;
+ValeurCmp = BUTTONS;
+IdModule  = SIL-4;
 EndCmp
 
 BeginCmp
