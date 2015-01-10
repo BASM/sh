@@ -1,0 +1,108 @@
+Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Сб 10 янв 2015 19:25:17
+
+BeginCmp
+TimeStamp = /53B453A6;
+Reference = D1;
+ValeurCmp = LED;
+IdModule  = LED-0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B44A10;
+Reference = IC1;
+ValeurCmp = ATMEGA328P-TQFP32;
+IdModule  = TQFP32;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B13D2C;
+Reference = IC2;
+ValeurCmp = SP3481CN;
+IdModule  = so-8;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B44DC6;
+Reference = P1;
+ValeurCmp = Power;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B4528F;
+Reference = P2;
+ValeurCmp = UART;
+IdModule  = SIL-4;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B4510D;
+Reference = P3;
+ValeurCmp = RS485;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B14024;
+Reference = P4;
+ValeurCmp = CONN_8;
+IdModule  = SIL-8;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B14265;
+Reference = P5;
+ValeurCmp = CONN_8;
+IdModule  = SIL-8;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B45424;
+Reference = R1;
+ValeurCmp = 1K;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B451EA;
+Reference = R2;
+ValeurCmp = 1K;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B457C7;
+Reference = R3;
+ValeurCmp = 10K;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B59FCA;
+Reference = R4;
+ValeurCmp = 560;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /53B59FD0;
+Reference = R5;
+ValeurCmp = 560;
+IdModule  = SM1206;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B154B5;
+Reference = U1;
+ValeurCmp = LM78L05ACZ;
+IdModule  = DPAK3;
+EndCmp
+
+BeginCmp
+TimeStamp = /54B13E08;
+Reference = U2;
+ValeurCmp = ULN2803L;
+IdModule  = SO18L;
+EndCmp
+
+EndListe
