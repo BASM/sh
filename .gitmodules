@@ -1,0 +1,3 @@
+[submodule "circuts/kcel"]
+	path = circuts/kcel
+	url = git@github.com:BASM/kcel.git
