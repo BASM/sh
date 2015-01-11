@@ -1,0 +1,30 @@
+IC: ATMEGA328P
+
+BUTTONS:
+  But1: PD4
+  But2: PD3
+  But3: PD2
+
+RS485:
+  DI: PD1
+  DO: PD0
+  Dir: PC2
+
+UARTr:
+  RXD:   RXD
+  TXD:   RXD
+  GND:   GND
+  RESET: RESET
+
+RELAY: "PINOUT"
+  R8: PB4
+  R7: PB3
+  R6: PB2
+  R5: PB1
+  R4: PB0
+  R3: PD7
+  R2: PD6
+  R1: PD5
+
+LEDS:
+  V: PC0
