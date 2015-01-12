@@ -1,30 +1,44 @@
-IC: ATMEGA328P
+---
+NAME: switch
+IC:
+  -
+    TYPE: ATMEGA328P
+    PIO:
+      BUTTONS:
+        TYPE: PIN
+        PINS:
+          But1: PD4
+          But2: PD3
+          But3: PD2
 
-BUTTONS:
-  But1: PD4
-  But2: PD3
-  But3: PD2
+      RS485:
+        TYPE: RS485
+        PINS:
+          DI: PD1
+          DO: PD0
+          Dir: PC2
 
-RS485:
-  DI: PD1
-  DO: PD0
-  Dir: PC2
+      UART:
+        TYPE: UART_RST
+        PINS:
+          RXD:
+          TXD:
+          GND:
+          RESET:
 
-UARTr:
-  RXD:   RXD
-  TXD:   RXD
-  GND:   GND
-  RESET: RESET
+      RELAY:
+        TYPE: POUT
+        PINS:
+          R8: PB4
+          R7: PB3
+          R6: PB2
+          R5: PB1
+          R4: PB0
+          R3: PD7
+          R2: PD6
+          R1: PD5
 
-RELAY: "PINOUT"
-  R8: PB4
-  R7: PB3
-  R6: PB2
-  R5: PB1
-  R4: PB0
-  R3: PD7
-  R2: PD6
-  R1: PD5
-
-LEDS:
-  V: PC0
+      LEDS:
+        TYPE: POUT
+        PINS:
+          V: PC0
