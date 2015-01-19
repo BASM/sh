@@ -2,6 +2,7 @@
 NAME: switch
 IC:
   -
+    NAME: ic
     TYPE: ATMEGA328P
     PIO:
       BUTTONS:
