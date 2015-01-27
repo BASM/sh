@@ -3,7 +3,6 @@ import os
 
 
 
-
 class PIO:
     def PIN_Gen(s):
       print("PIN Name: %s"%s.name)

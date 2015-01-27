@@ -1,10 +1,16 @@
 #include <stdio.h>
-#include "shclass"
+#include "icclases.h"
 
 int shmain(void) {
-  int result;
-  result = sh.switch.BUTTONS.But1.check();
-  printf("But1 check result: %i\n", result);
+
+  MCU_ic ic;
+
+  volatile int result;
+  result = ic.BUTTONS.But1.check();
 
   return 0;
+}
+
+int main(void) {
+  return shmain();
 }

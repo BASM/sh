@@ -1,10 +1,11 @@
 ---
-NAME: switch
+NAME: sw
 IC:
   -
     NAME: ic
     TYPE: ATMEGA328P
-    PIO:
+    FREQ: 12 000 000
+    PIOS:
       BUTTONS:
         TYPE: PIN
         PINS:
@@ -42,4 +43,4 @@ IC:
       LEDS:
         TYPE: POUT
         PINS:
-          V: PC0
+          l1: PC0

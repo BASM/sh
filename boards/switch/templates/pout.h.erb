@@ -1,0 +1,7 @@
+class POUT_<%=@name%> {
+  public:
+  POUT_<%=@name%> () {<%=@ddr%> &= ~(1<<<%=@bit%>);};
+  void set()      {<%=@port%> |= 1<<<%=@bit%>;}
+  void cli()      {<%=@port%> &= 1<<<%=@bit%>;}
+  void set(fint val);
+};
