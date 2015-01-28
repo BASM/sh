@@ -1,14 +1,13 @@
+include ../../scripts/build.mk
 
 CXX=avr-g++
 CFLAGS=-Os
 
 BOARD=-mmcu=atmega328p
 
-all: rb
-
 rb:
 	ruby main.rb
-	$(CXX) -o test.exe $(CFLAGS) $(BOARD) icclases.cc main.cc #shclass.cc
+	$(CXX) -o test.exe $(CFLAGS) $(BOARD) shclass.cc main.cc #shclass.cc
 
 gccs:
 	$(CXX) -o test.exe $(CFLAGS) $(BOARD) main.cc #shclass.cc

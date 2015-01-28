@@ -138,6 +138,7 @@ EOF
     h.write <<-EOF
 #include <inttypes.h>
 #include <avr/io.h>
+#include "shclass.h"
 #include "shtype.h"
 EOF
   end

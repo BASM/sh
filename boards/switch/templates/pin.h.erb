@@ -1,5 +1,0 @@
-class PIN_<%=@name%> {
-  public:
-  PIN_<%=@name%>() { <%=@ddr%>|=1<<<%=@bit%>; } //input
-  int check() { return (<%=@pin%>>><%=@bit%>)&1; }
-};
