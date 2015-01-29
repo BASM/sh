@@ -1,0 +1,46 @@
+---
+NAME: sw
+IC:
+  -
+    NAME: ic
+    TYPE: ARM
+    FREQ: 12 000 000
+    PIOS:
+      BUTTONS:
+        TYPE: PIN
+        PINS:
+          But1: PD4
+          But2: PD3
+          But3: PD2
+
+      RS485:
+        TYPE: RS485
+        PINS:
+          DI: PD1
+          DO: PD0
+          Dir: PC2
+
+      UART:
+        TYPE: UART_RST
+        PINS:
+          RXD:
+          TXD:
+          GND:
+          RESET:
+
+      RELAY:
+        TYPE: POUT
+        PINS:
+          R8: PB4
+          R7: PB3
+          R6: PB2
+          R5: PB1
+          R4: PB0
+          R3: PD7
+          R2: PD6
+          R1: PD5
+
+      LEDS:
+        TYPE: POUT
+        PINS:
+          l1: PC0
