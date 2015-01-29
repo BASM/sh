@@ -1,10 +1,17 @@
 include ../../scripts/build.mk
 
-CXX=avr-g++
-CFLAGS=-Os
+BOARDS=at328 arm
 
-BOARD=-mmcu=atmega328p
 
+DST=test.exe
+OBJS=main.o
+#CXX=avr-g++
+#CFLAGS=-Os
+
+#BOARD=-mmcu=atmega328p
+
+
+include ${POST}
 rb:
 	ruby main.rb
 	$(CXX) -o test.exe $(CFLAGS) $(BOARD) shclass.cc main.cc #shclass.cc

@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include "icclases.h"
+#include <icclases.h>
+//#include <shclass.h>
 
 int shmain(void) {
 
@@ -8,7 +9,7 @@ int shmain(void) {
   volatile int result;
   result = ic.BUTTONS.But1.check();
 
-  return 0;
+  return result;
 }
 
 int main(void) {

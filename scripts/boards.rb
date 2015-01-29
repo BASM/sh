@@ -1,6 +1,9 @@
 require 'yaml'
 
-TMLDIR="templates"
+#FIXME
+TMLDIR="#{$:[0]}/templates"
+
+$FGEN=[]
 
 class PINOUT_Gen
   def erbrun(fname,name,port,outf)
@@ -144,12 +147,14 @@ EOF
   end
 
   def generate()
-    ccfname="#{@name}clases.cc"
-    hfname ="#{@name}clases.h"
+    ccfname="srcgen/#{@name}clases.cc"
+    hfname_inc ="#{@name}clases.h"
+    hfname ="srcgen/#{@name}clases.h"
+    $FGEN += [ccfname]
     genfile_cc=File.open(ccfname,"w")
     genfile_h =File.open(hfname ,"w")
 
-    writeheaders(genfile_cc, genfile_h, hfname)
+    writeheaders(genfile_cc, genfile_h, hfname_inc)
     @PIOS=[]
     
     puts "> IC name #{@name}, type #{@type}:" 
@@ -205,5 +210,6 @@ EOF
       i.generate()
       #puts "Class #{cname} -- #{name}"
     }
+    STDERR.puts $FGEN
   end
 end

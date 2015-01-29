@@ -1,8 +1,9 @@
-require './boards'
+#!/usr/bin/env ruby
+require 'boards'
 require 'erb'
 
-
-brd=Boards.new("board.yml")
+bname = ARGV[0]
+brd=Boards.new(bname)
 brd.generate()
 
 =begin
