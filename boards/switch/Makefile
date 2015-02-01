@@ -1,17 +1,23 @@
 include ../../scripts/build.mk
 
-BOARDS=at328 arm
-
+BOARDS=at328
 
 DST=test.exe
 OBJS=main.o
-#CXX=avr-g++
-#CFLAGS=-Os
-
-#BOARD=-mmcu=atmega328p
 
 
 include ${POST}
+clean:
+	rm -Rf blib obj gensrc test.exe res
+
+
+
+
+
+
+
+
+
 rb:
 	ruby main.rb
 	$(CXX) -o test.exe $(CFLAGS) $(BOARD) shclass.cc main.cc #shclass.cc

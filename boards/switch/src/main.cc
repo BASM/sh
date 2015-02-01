@@ -1,14 +1,11 @@
 #include <stdio.h>
-#include <icclases.h>
-//#include <shclass.h>
+#include <swclases.h>
 
 int shmain(void) {
-
-  MCU_ic ic;
-
+  MCU_sw ic;
   volatile int result;
-  result = ic.BUTTONS.But1.check();
 
+  result = ic.BUTTONS.But1.check();
   return result;
 }
 

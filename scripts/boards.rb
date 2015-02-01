@@ -139,6 +139,8 @@ class IC
 #include "#{hfname}"
 EOF
     h.write <<-EOF
+#ifndef __AUTOGEN_HEADER_H__
+#define __AUTOGEN_HEADER_H__
 #include <inttypes.h>
 #include <avr/io.h>
 #include "shclass.h"
@@ -147,9 +149,9 @@ EOF
   end
 
   def generate()
-    ccfname="srcgen/#{@name}clases.cc"
+    ccfname="gensrc/#{@name}clases.cc"
     hfname_inc ="#{@name}clases.h"
-    hfname ="srcgen/#{@name}clases.h"
+    hfname ="gensrc/#{@name}clases.h"
     $FGEN += [ccfname]
     genfile_cc=File.open(ccfname,"w")
     genfile_h =File.open(hfname ,"w")
@@ -173,6 +175,7 @@ EOF
       fd.write("\t #{cname} #{name};\n");
     }
     fd.write("};\n")
+    fd.write("#endif \n")
     
     return [@name,@type]
   end

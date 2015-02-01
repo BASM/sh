@@ -2,7 +2,7 @@
 NAME: sw
 IC:
   -
-    NAME: ic
+    NAME: sw
     TYPE: ATMEGA328P
     FREQ: 12 000 000
     PIOS:
