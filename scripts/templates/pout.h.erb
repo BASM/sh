@@ -2,6 +2,6 @@
 class POUT_<%=@name%> : public POUT_MASTER {
   public:
   POUT_<%=@name%> () {<%=@ddr%> &= ~(1<<<%=@bit%>);};
-  void set()      {<%=@port%> |= 1<<<%=@bit%>;}
-  void cli()      {<%=@port%> &= 1<<<%=@bit%>;}
+  __attribute__((always_inline)) inline void set()      {<%=@port%> |= 1<<<%=@bit%>;}
+  __attribute__((always_inline)) inline void cli()      {<%=@port%> &= 1<<<%=@bit%>;}
 };

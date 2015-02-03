@@ -1,22 +1,16 @@
 include ../../scripts/build.mk
 
-BOARDS=at328
-
+#BOARDS=at328_sw
 DST=test.exe
-OBJS=main.o
 
+test.exe-BOARD=at328_sw
+test.exe-OBJS=main.o
+
+PRE=clean
 
 include ${POST}
 clean:
-	rm -Rf blib obj gensrc test.exe res
-
-
-
-
-
-
-
-
+	rm -Rf lib obj gensrc test.exe res
 
 rb:
 	ruby main.rb

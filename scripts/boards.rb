@@ -62,7 +62,8 @@ end
 
 class POUT_Gen < PINOUT_Gen
   def cclist
-    return ["pout.cc"]
+    #return ["pout.cc"]
+    return []
   end
   def hlist
     return ["pout.h"]
@@ -72,11 +73,36 @@ class POUT_Gen < PINOUT_Gen
   end
 end
 
+UARTDIR="../../libs/avr/uart"
+
+class UART_Gen
+  def initialize(obj,cc,h)
+    h.write <<-EOF
+class #{cname}_#{obj.name} {
+  public:
+  #{cname}_#{obj.name} ();
+};
+EOF
+  fd = File.open("#{UARTDIR}/tmpl/uart.cc.erb");
+  erb = ERB.new(fd.read);
+  fd.close()
+
+  @baud=obj.bd["BAUD"]
+  @name=obj.name
+  cc.write(erb.result(binding))
+
+  end
+
+  def cname
+    return "UART"
+  end
+end
 
 
 $piosdb={}
 $piosdb["PIN"]=PIN_Gen
 $piosdb["POUT"]=POUT_Gen
+#$piosdb["UART"]=UART_Gen
 
 ##################
 
@@ -92,10 +118,14 @@ class PIO
   def pins
     @pins
   end
+  def bd
+    @obj
+  end
   def initialize(pio,name)
     @pins=pio["PINS"]
     @type=pio["TYPE"]
     @name=name
+    @obj=pio
   end
   def generate(cc,h)
     puts ">> Generate #{@name} type #{@type}:"
@@ -124,9 +154,9 @@ end
 #  FREQ
 #  PIDS -- list of IO
 class IC
-  def initialize(ic)
+  def initialize(name, ic)
+    @name=name
     @type=ic["TYPE"]
-    @name=ic["NAME"]
     @pios=[]
     icpio=ic["PIOS"]
     icpio.each{ |name,pio| 
@@ -146,6 +176,10 @@ EOF
 #include "shclass.h"
 #include "shtype.h"
 EOF
+  end
+
+  def name()
+    @name
   end
 
   def generate()
@@ -188,9 +222,10 @@ class Boards
     f.close()
 
     @name = @yml["NAME"]
-    @ic=[]
-    @yml["IC"].each{ |i| 
-      @ic+=[IC.new(i)]
+    @ic={}
+    @yml["IC"].each{ |name,obj| 
+      #puts "==========IC: #{name} -- OBJ #{obj}====="
+      @ic[name]=IC.new(name,obj)
     }
   end
 
@@ -202,17 +237,18 @@ class Board_#{@name} {
 EOF
   end
 
-  def generate()
+  def generate(icname)
     bfname="#{@name}_board.h"
     puts "Write file #{bfname}"
     #bfd=File.open(bfname,"w")
-    puts "Board name '#{@name}'"
-    #makeheader(bfd, bfname)
-    @ic.each{ |i|
-      #puts "XXXX #{i}"
-      i.generate()
-      #puts "Class #{cname} -- #{name}"
-    }
+    #puts "Board name '#{@name}'"
+    #puts @ic.inspect
+    @ic[icname].generate()
+    #.each{ |i|   i.generate(} }
     STDERR.puts $FGEN
+  end
+
+  def iclist()
+    @ic.map{ |name,obj| name }.join(" ")
   end
 end

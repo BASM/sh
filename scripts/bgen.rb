@@ -4,13 +4,17 @@ require 'erb'
 
 bname = ARGV[0]
 brd=Boards.new(bname)
-brd.generate()
 
-=begin
-erb = ERB.new(File.open("templates/pin.h.erb").read())
-@ddr="DDRD"
-@port="PORTD"
-@bite=4
+if ARGV[1] == "-h"
+  puts "Usage: bgen.rb <board.yml> [-h] [iccname]"
+  puts "  <no opts> -- list icces from file"
+  puts "  -h        -- current help"
+  puts "  iccname   -- generate source for icname"
+  exit
+end
 
-puts erb.run()
-=end
+if ARGV[1] == nil
+  puts brd.iclist()
+else
+  brd.generate(ARGV[1])
+end
