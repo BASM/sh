@@ -216,8 +216,33 @@ EOF
 end
 
 class Boards
+  def lsdir(filename)
+    list=`ls #{filename}`.split(" ")
+    list.map{|i| "#{filename}/#{i}" }
+  end
+
+  def findopenfile(filename)
+    searchlist=[]
+    sdir=[]
+    sdir+=["."]
+    sdir+=lsdir("#{TOPDIR}/boards/")
+    sdir.map{ |dir|
+      fname="#{dir}/boards/#{filename}"
+      searchlist+=[fname]
+      begin
+        fd = File.open(fname)
+        return fd
+      rescue 
+      end
+    }
+    puts "Try search files on:"
+    puts searchlist.map{|i| "\t* #{i}"}
+    raise "Board file #{filename} don't find"
+    exit 0
+  end
+
   def initialize(filename)
-    f = open(filename)
+    f = findopenfile(filename)
     @yml = YAML.load(f)
     f.close()
 

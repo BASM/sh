@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
+# encoding: utf-8
+#
+#XXX FIXME set dynamic this
+TOPDIR="/home/asm/Projects/sh"
 require 'boards'
 require 'erb'
+
 
 bname = ARGV[0]
 brd=Boards.new(bname)

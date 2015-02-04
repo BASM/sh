@@ -5,8 +5,11 @@ CFLAGS+= -Os $(WFLAGS) -Igensrc
 CFLAGS+= ${BOARD}
 CFLAGS+= -I${SCRIPTDIR}/templates
 
-B_BOARDS=${BOARDS:%=boards/%.yml}
+B_BOARDS=${BOARDS:%=%.yml}
 B_LIBS=${BOARDS:%=blib/lib%.a}
+
+NOPRINTDIR=--no-print-directory
+MAKE=make ${NOPRINTDIR}
 
 CXX=avr-g++
 AR=avr-ar
@@ -28,19 +31,19 @@ all: $(DST)
 
 ifeq ($(BOARDNAME),)
 boardsgen:
-	for i in ${BOARDS} ; do BOARDNAME="$$i" make ; done
+	for i in ${BOARDS} ; do BOARDNAME="$$i" $(MAKE} ; done
 else
 boardsgen:
-	BOARDNAME=$(BOARDNAME) make icesgen
+	BOARDNAME=$(BOARDNAME) ${MAKE} icesgen
 endif
 
 ifeq ($(ICNAME),)
 icesgen:  dirs
-	for i in $(shell $(BGEN) boards/$(BOARDNAME).yml) ; do BOARDNAME="${BOARDNAME}" ICNAME="$$i" make ; done
+	for i in $(shell $(BGEN) boards/$(BOARDNAME).yml) ; do BOARDNAME="${BOARDNAME}" ICNAME="$$i" ${MAKE} ; done
 else
 icesgen:
 	echo "*********************** BUILD ICC FOR ${BOARDNAME} and ${ICNAME}"
-	#for i in $(shell $(BGEN) boards/$(BOARDNAME).yml ices) ; do ICNAME="$$i" make ; done
+	#for i in $(shell $(BGEN) $(BOARDNAME).yml ices) ; do ICNAME="$$i" make ; done
 endif
 
 libraris: lib/lib${BOARDNAME}_${ICNAME}.a 
@@ -53,8 +56,8 @@ B_OBJS=${OBJS:%=obj/%}
 BOARD=-mmcu=atmega328
 
 generator_%:
-	${BGEN} boards/$*.yml 2> res || ( cat res && false )
-	for i in $(shell $(BGEN) boards/$*.yml) ; do GEN=1 B_OBJ="$$i" make  ; done
+	${BGEN} $*.yml 2> res || ( cat res && false )
+	for i in $(shell $(BGEN) $*.yml) ; do GEN=1 B_OBJ="$$i" ${MAKE}  ; done
 	false
 
 
@@ -66,12 +69,12 @@ lib/lib%.a: ${BLIBOBJ}
 	$(AR) rvs $@ ${BLIBOBJ}
 
 generator:
-	mkdir -p gensrc
-	$(BGEN) boards/$(BOARDNAME).yml $(ICNAME)
+	@mkdir -p gensrc
+	$(BGEN) $(BOARDNAME).yml $(ICNAME)
 else
 lib/lib%.a:
-	$(subst _, ICNAME=,$(addprefix BOARDNAME=,$*)) make generator
-	$(subst _, ICNAME=,$(addprefix BOARDNAME=,$*)) make $@
+	@$(subst _, ICNAME=,$(addprefix BOARDNAME=,$*)) ${MAKE} generator
+	@$(subst _, ICNAME=,$(addprefix BOARDNAME=,$*)) ${MAKE} $@
 endif
 
 BINOBJS=$(addprefix obj/,${$(BIN)-OBJS})
@@ -79,9 +82,9 @@ BINBLIB=$(addprefix lib/lib,${$(BIN)-BOARD}.a)
 
 ifeq ($(BIN),)
 %.exe:
-	if [ "$(BIN)" = "" ] ; then BIN=$@ make $@ ; fi
+	if [ "$(BIN)" = "" ] ; then BIN=$@ ${MAKE} $@ ; fi
 else
-%.exe: ${BINBLIB} ${BINOBJS}
+${BIN}: ${BINBLIB} ${BINOBJS}
 	${CXX} -o $@  ${BINOBJS} ${BINBLIB}
 endif
 
@@ -109,3 +112,5 @@ obj/%.o: ${SCRIPTDIR}/templates/%.cc
 run:
 	./$(DST)
 
+clean:
+	rm -Rf lib obj gensrc $(DST)
