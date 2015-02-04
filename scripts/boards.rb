@@ -1,10 +1,15 @@
 require 'yaml'
 
+$piosdb={}
+
+## FIXME dynamic create
+require "#{TOPDIR}/libs/avr/uart/generate"
+
 #FIXME
 TMLDIR="#{$:[0]}/templates"
 
-$FGEN=[]
 
+$FGEN=[]
 class PINOUT_Gen
   def erbrun(fname,name,port,outf)
         fd=File.open(fname)
@@ -73,36 +78,8 @@ class POUT_Gen < PINOUT_Gen
   end
 end
 
-UARTDIR="../../libs/avr/uart"
-
-class UART_Gen
-  def initialize(obj,cc,h)
-    h.write <<-EOF
-class #{cname}_#{obj.name} {
-  public:
-  #{cname}_#{obj.name} ();
-};
-EOF
-  fd = File.open("#{UARTDIR}/tmpl/uart.cc.erb");
-  erb = ERB.new(fd.read);
-  fd.close()
-
-  @baud=obj.bd["BAUD"]
-  @name=obj.name
-  cc.write(erb.result(binding))
-
-  end
-
-  def cname
-    return "UART"
-  end
-end
-
-
-$piosdb={}
 $piosdb["PIN"]=PIN_Gen
 $piosdb["POUT"]=POUT_Gen
-#$piosdb["UART"]=UART_Gen
 
 ##################
 
@@ -158,6 +135,8 @@ class IC
     @name=name
     @type=ic["TYPE"]
     @pios=[]
+    puts ic.inspect
+    @FREQ=ic["FREQ"].split.join + "L"
     icpio=ic["PIOS"]
     icpio.each{ |name,pio| 
       cp = PIO.new(pio,name)
@@ -190,10 +169,18 @@ EOF
     genfile_cc=File.open(ccfname,"w")
     genfile_h =File.open(hfname ,"w")
 
+    genfile_h.write <<-EOF
+#define F_CPU #{@FREQ}
+EOF
+
+
     writeheaders(genfile_cc, genfile_h, hfname_inc)
     @PIOS=[]
     
     puts "> IC name #{@name}, type #{@type}:" 
+
+    puts 
+
     @pios.each{|i|
       res=i.generate(genfile_cc,genfile_h)
       @PIOS += [res] if res != nil
@@ -221,7 +208,7 @@ class Boards
     list.map{|i| "#{filename}/#{i}" }
   end
 
-  def findopenfile(filename)
+  def findopenymlfile(filename)
     searchlist=[]
     sdir=[]
     sdir+=["."]
@@ -242,7 +229,7 @@ class Boards
   end
 
   def initialize(filename)
-    f = findopenfile(filename)
+    f = findopenymlfile(filename)
     @yml = YAML.load(f)
     f.close()
 
@@ -263,13 +250,7 @@ EOF
   end
 
   def generate(icname)
-    bfname="#{@name}_board.h"
-    puts "Write file #{bfname}"
-    #bfd=File.open(bfname,"w")
-    #puts "Board name '#{@name}'"
-    #puts @ic.inspect
     @ic[icname].generate()
-    #.each{ |i|   i.generate(} }
     STDERR.puts $FGEN
   end
 
