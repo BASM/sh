@@ -13,7 +13,7 @@ class POUT_MASTER {
   POUT_MASTER() {};
   void set(fint val) ;
   __attribute__((always_inline)) virtual void set()=0;
-  __attribute__((always_inline)) virtual void cli()=0;
+  __attribute__((always_inline)) virtual void clr()=0;
 };
 
 

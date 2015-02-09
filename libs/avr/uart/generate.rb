@@ -1,21 +1,16 @@
 
 UARTDIR="#{TOPDIR}/libs/avr/uart"
 class UART_Gen
-  def initialize(obj,cc,h)
-    h.write <<-EOF
-class #{cname}_#{obj.name} {
-  public:
-  #{cname}_#{obj.name} ();
-};
-EOF
-  fd = File.open("#{UARTDIR}/tmpl/uart.cc.erb");
-  erb = ERB.new(fd.read);
-  fd.close()
 
+  def initialize(obj,cc,h)
+  erb = erb_read("#{UARTDIR}/tmpl/uart.h.erb");
+  @name=obj.name
+  h.write(erb.result(binding))
+
+  erb = erb_read("#{UARTDIR}/tmpl/uart.cc.erb");
   @baud=obj.bd["BAUD"]
   @name=obj.name
   cc.write(erb.result(binding))
-
   end
 
   def cname

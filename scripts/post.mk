@@ -86,6 +86,7 @@ ifeq ($(BIN),)
 else
 ${BIN}: ${BINBLIB} ${BINOBJS}
 	${CXX} -o $@  ${BINOBJS} ${BINBLIB}
+	avr-size $@
 endif
 
 check:

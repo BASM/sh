@@ -3,10 +3,9 @@
 
 int shmain(void)  {
   MCU_sw ic;
+  ic.stdio.set(ic.Uart.stdio());
 
-  ic.stdio(&ic.Uart);
 
   printf("Hello world\n");
-
   return 0;
 }

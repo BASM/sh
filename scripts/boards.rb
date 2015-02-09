@@ -4,82 +4,19 @@ $piosdb={}
 
 ## FIXME dynamic create
 require "#{TOPDIR}/libs/avr/uart/generate"
+require "#{TOPDIR}/libs/avr/pio/generate"
 
 #FIXME
 TMLDIR="#{$:[0]}/templates"
 
+def erb_read(fname)
+  fd = File.open(fname);
+  erb = ERB.new(fd.read);
+  fd.close()
+  return erb
+end
 
 $FGEN=[]
-class PINOUT_Gen
-  def erbrun(fname,name,port,outf)
-        fd=File.open(fname)
-        @erb = ERB.new(fd.read)
-        fd.close()
-        num,bit=port.scan(/P(.)(.)/)[0]
-        @ddr="DDR#{num}"
-        @port="PORT#{num}"
-        @pin="PIN#{num}"
-        @bit=bit
-        @name=name
-        outf.write(@erb.result(binding))
-  end
-  def initialize(obj,cc,h)
-    @obj=obj
-    @cc=cc
-    @h=h
-    objname=obj.name
-
-    @obj.pins.each{ |name,port|
-      cclist.each{ |fname|  erbrun("#{TMLDIR}/#{fname}.erb",name,port,cc) }
-      hlist.each { |fname|  erbrun("#{TMLDIR}/#{fname}.erb",name,port,h)  }
-    }
-    classgen(obj,h)
-
-  end
-
-  def name()
-    @name
-  end
-  def classgen(obj,h)
-    h.write <<-EOF
-class #{cname}_#{obj.name} {
-  public:
-EOF
-    @obj.pins.each{ |name,port| 
-      h.write "\t#{cname()}_#{name} #{name};\n"
-    }
-    h.write("};\n")
-  end
-end
-
-
-class PIN_Gen < PINOUT_Gen
-  def cclist
-    []
-  end
-  def hlist
-   ["pin.h"]
-  end
-  def cname
-    return "PIN"
-  end
-end
-
-class POUT_Gen < PINOUT_Gen
-  def cclist
-    #return ["pout.cc"]
-    return []
-  end
-  def hlist
-    return ["pout.h"]
-  end
-  def cname
-    return "POUT"
-  end
-end
-
-$piosdb["PIN"]=PIN_Gen
-$piosdb["POUT"]=POUT_Gen
 
 ##################
 
@@ -192,12 +129,11 @@ class MCU_#{@name} {
     public:
 
 EOF
-    @PIOS.each{ |cname,name|
-      fd.write("\t #{cname} #{name};\n");
-    }
+    
+    @PIOS.each{ |cname,name| fd.write("\t #{cname} #{name};\n");}
     fd.write("};\n")
     fd.write("#endif \n")
-    
+
     return [@name,@type]
   end
 end
