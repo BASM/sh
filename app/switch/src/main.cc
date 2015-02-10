@@ -4,6 +4,7 @@
 #include <util/delay.h>
 
 #include <avr/interrupt.h>
+#include "src/rs485.h"
                         
 #define deb(...) printf(__VA_ARGS__);
 
@@ -14,19 +15,7 @@ MCU_sw ic;
 //
 // LIBARARY
 
-#define RS485_DDR  DDRC
-#define RS485_PORT PORTC
-#define RS485_PIN  PINC
-#define RS485_BIT  (1<<2) 
-class RS485 {
-  public:
-  RS485();
-  void setin()  { RS485_PORT |=  RS485_BIT; }
-  void setout() { RS485_PORT &= ~RS485_BIT; }
-
-};
-
-RS485::RS485() {
+RS485_RS485::RS485_RS485() {
 #ifndef F_CPU
 #error Please set F_CPU!
 #endif
@@ -141,8 +130,7 @@ static void RS485_parser(void) {
     RS485_reset();
     return;
   }
-
-  cmd = RS485_resv_buff[5];
+cmd = RS485_resv_buff[5];
   if (RS485_CRC(&cmd, 1) != RS485_resv_buff[6]) {
     deb("DATA CRC ERROR\n");
     //DATA CRC error
@@ -179,7 +167,7 @@ void cmd_run(int cmd) {
 }
 
 int shmain(void) {
-  RS485  rs;
+  RS485_rs *rs=ic.rs;
 
   sei();
 
@@ -189,7 +177,7 @@ int shmain(void) {
     ic.LEDS.l1.clr();
     sleep(1);
 
-    RS485_parser();
+   // RS485_parser();
 
     if (COMMAND!=0) {
       cmd_run(COMMAND);

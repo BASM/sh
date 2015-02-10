@@ -12,11 +12,10 @@ IC:
           But2: PD3
           But3: PD2
 
-      RS485:
+      rs:
         TYPE: RS485
         PINS:
-          DI: PD1
-          DO: PD0
+          DIO: Uart
           Dir: PC2
 
       Uart:

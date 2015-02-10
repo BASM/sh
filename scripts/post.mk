@@ -1,7 +1,7 @@
 #WFLAGS+= -Wall -Werror -Wmissing-declarations
 WFLAGS+= -Wall -Werror #-Wmissing-prototypes
 #CFLAGS+= $(WFLAGS) -Igensrc -I$(LIBDIR)/shlib/include
-CFLAGS+= -Os $(WFLAGS) -Igensrc
+CFLAGS+= -Os $(WFLAGS) -Igensrc -Isrc
 CFLAGS+= ${BOARD}
 CFLAGS+= -I${SCRIPTDIR}/templates
 

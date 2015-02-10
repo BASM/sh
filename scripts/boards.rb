@@ -3,6 +3,7 @@ require 'yaml'
 $piosdb={}
 
 ## FIXME dynamic create
+require "#{TOPDIR}/libs/avr/rs485/generate"
 require "#{TOPDIR}/libs/avr/uart/generate"
 require "#{TOPDIR}/libs/avr/pio/generate"
 
@@ -128,6 +129,7 @@ EOF
 class MCU_#{@name} {
     public:
 
+    STDIO  stdio;
 EOF
     
     @PIOS.each{ |cname,name| fd.write("\t #{cname} #{name};\n");}

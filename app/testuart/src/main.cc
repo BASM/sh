@@ -3,7 +3,8 @@
 
 int shmain(void)  {
   MCU_sw ic;
-  ic.stdio.set(ic.Uart.stdio());
+
+  ic.stdio.setio(ic.Uart.stdio());
 
 
   printf("Hello world\n");
