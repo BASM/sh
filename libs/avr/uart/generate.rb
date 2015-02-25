@@ -2,12 +2,13 @@
 UARTDIR="#{TOPDIR}/libs/avr/uart"
 class UART_Gen
 
-  def initialize(obj,cc,h)
-  erb = erb_read("#{UARTDIR}/tmpl/uart.h.erb");
+  def initialize(obj,cc,h,mode)
+  fpref = "_host" if mode == :host
+  erb = erb_read("#{UARTDIR}/tmpl/uart#{fpref}.h.erb");
   @name=obj.name
   h.write(erb.result(binding))
 
-  erb = erb_read("#{UARTDIR}/tmpl/uart.cc.erb");
+  erb = erb_read("#{UARTDIR}/tmpl/uart#{fpref}.cc.erb");
   @baud=obj.bd["BAUD"]
   @name=obj.name
   cc.write(erb.result(binding))
@@ -19,5 +20,4 @@ class UART_Gen
 end
 
 
-$piosdb["UART"]=UART_Gen
-puts "HI "
+#$piosdb["UART"]=UART_Gen

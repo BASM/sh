@@ -12,15 +12,16 @@ class PINOUT_Gen
         @name=name
         outf.write(@erb.result(binding))
   end
-  def initialize(obj,cc,h)
+  def initialize(obj,cc,h,mode)
     @obj=obj
     @cc=cc
     @h=h
     objname=obj.name
 
+    fpref = "host_" if mode == :host
     @obj.pins.each{ |name,port|
-      cclist.each{ |fname|  erbrun("#{PIODIR}/tmpl/#{fname}.erb",name,port,cc) }
-      hlist.each { |fname|  erbrun("#{PIODIR}/tmpl/#{fname}.erb" ,name,port,h)  }
+      cclist.each{ |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,cc) }
+      hlist.each { |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,h ) }
     }
     classgen(obj,h)
 

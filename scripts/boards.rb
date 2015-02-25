@@ -42,7 +42,7 @@ class PIO
     @name=name
     @obj=pio
   end
-  def generate(cc,h)
+  def generate(cc,h,mode)
     puts ">> Generate #{@name} type #{@type}:"
 
     obj=nil
@@ -54,10 +54,8 @@ class PIO
     return if obj == nil
     cname ="#{@type}_#{@name}"
 
-    obj.new(self,cc,h).cname
+    obj.new(self,cc,h,mode).cname
 
-    #h.
-    
     [cname,@name]
   end
 end
@@ -73,7 +71,7 @@ class IC
     @name=name
     @type=ic["TYPE"]
     @pios=[]
-    puts ic.inspect
+    #puts ic.inspect
     @FREQ=ic["FREQ"].split.join + "L"
     icpio=ic["PIOS"]
     icpio.each{ |name,pio| 
@@ -81,7 +79,14 @@ class IC
       @pios+=[cp]
     }
   end
-  def writeheaders(cc,h,hfname)
+  def writeheaders(cc,h,hfname,mode)
+    hostpref="_avr"
+
+    if mode == :host
+      hostpref="_host" if mode == :host
+    else
+      cc.write "#include <avr/io.h>\n"
+    end
     cc.write <<-EOF
 #include "#{hfname}"
 EOF
@@ -89,7 +94,6 @@ EOF
 #ifndef __AUTOGEN_HEADER_H__
 #define __AUTOGEN_HEADER_H__
 #include <inttypes.h>
-#include <avr/io.h>
 #include "shclass.h"
 #include "shtype.h"
 EOF
@@ -99,10 +103,17 @@ EOF
     @name
   end
 
-  def generate()
-    ccfname="gensrc/#{@name}clases.cc"
-    hfname_inc ="#{@name}clases.h"
-    hfname ="gensrc/#{@name}clases.h"
+  def generate(mode)
+    if mode == :host
+      ccfname="gensrc/#{@name}clases_host.cc"
+      hfname ="gensrc/#{@name}clases_host.h"
+      hfname_inc ="#{@name}clases_host.h"
+    else
+      ccfname="gensrc/#{@name}clases_avr.cc"
+      hfname ="gensrc/#{@name}clases_avr.h"
+      hfname_inc ="#{@name}clases_avr.h"
+    end
+
     $FGEN += [ccfname]
     genfile_cc=File.open(ccfname,"w")
     genfile_h =File.open(hfname ,"w")
@@ -111,22 +122,18 @@ EOF
 #define F_CPU #{@FREQ}
 EOF
 
-
-    writeheaders(genfile_cc, genfile_h, hfname_inc)
+    writeheaders(genfile_cc, genfile_h, hfname_inc, mode)
     @PIOS=[]
     
     puts "> IC name #{@name}, type #{@type}:" 
-
-    puts 
-
     @pios.each{|i|
-      res=i.generate(genfile_cc,genfile_h)
+      res=i.generate(genfile_cc,genfile_h,mode)
       @PIOS += [res] if res != nil
     }
 
     fd = genfile_h
     fd.write <<-EOF
-class MCU_#{@name} {
+class MCU_#{@name} : public MCU {
     public:
 
     STDIO  stdio;
@@ -179,17 +186,13 @@ class Boards
     }
   end
 
-  def makeheader(fd, fname)
-    fd.write <<-EOF
-class Board_#{@name} {
-
-}
-EOF
+  def generate(icname)
+    @ic[icname].generate(nil)
+    STDERR.puts $FGEN
   end
 
-  def generate(icname)
-    @ic[icname].generate()
-    STDERR.puts $FGEN
+  def generate_host(icname)
+    @ic[icname].generate(:host)
   end
 
   def iclist()

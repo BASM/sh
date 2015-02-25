@@ -12,8 +12,25 @@ class POUT_MASTER {
   //POUT_MASTER(int ddr) {this->ddr=ddr};
   POUT_MASTER() {};
   void set(fint val) ;
-  __attribute__((always_inline)) virtual void set()=0;
-  __attribute__((always_inline)) virtual void clr()=0;
+  virtual void set();
+  virtual void clr();
+};
+
+class shio {
+  public:
+
+};
+
+//Standard STDIO wrapper
+class STDIO {
+  public:
+    void setio(shio *io) {};
+
+};
+
+class MCU {
+  public:
+    void sleep_s(int i);
 };
 
 
