@@ -2,6 +2,8 @@
 #include <swclases.h>
 
 int shmain(void)  {
+  printf("Hello world\n");
+
   MCU_sw ic;
 
   while (1) {
@@ -13,5 +15,12 @@ int shmain(void)  {
 
 
   printf("Hello world\n");
+  return 0;
+}
+
+int main(void) {
+
+  shmain();
+
   return 0;
 }

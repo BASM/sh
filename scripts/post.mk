@@ -3,6 +3,7 @@ MAKE=make ${NOPRINTDIR}
 
 
 ALLDST+=$(foreach i,$(DST),$i host_$i)
+#ALLDST+=$(DST)
 
 
 TBIN=$(@:host_%=%)
@@ -35,4 +36,4 @@ endif
 
 
 clean:
-	rm -Rf lib obj gensrc $(DST)
+	rm -Rf lib obj gensrc $(ALLDST)

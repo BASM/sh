@@ -1,5 +1,5 @@
 
-PIODIR="#{TOPDIR}/libs/avr/pio"
+PIODIR="#{TOPDIR}/libs/pio"
 
 class PINOUT_Gen
   def erbrun(fname,name,port,outf)
@@ -20,23 +20,23 @@ class PINOUT_Gen
 
     fpref = "host_" if mode == :host
     @obj.pins.each{ |name,port|
-      cclist.each{ |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,cc) }
-      hlist.each { |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,h ) }
+      #cclist.each{ |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,cc) }
+      #hlist.each { |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,h ) }
     }
     classgen(obj,h)
-
   end
 
   def name()
     @name
   end
+
   def classgen(obj,h)
     h.write <<-EOF
 class #{cname}_#{obj.name} {
   public:
 EOF
     @obj.pins.each{ |name,port| 
-      h.write "\t#{cname()}_#{name} #{name};\n"
+      h.write "\t#{cname()} #{name};\n"
     }
     h.write("};\n")
   end
@@ -67,7 +67,7 @@ class POUT_Gen < PINOUT_Gen
   end
 end
 
-$piosdb["PIN"]=PIN_Gen
+#$piosdb["PIN"]=PIN_Gen
 $piosdb["POUT"]=POUT_Gen
 
 

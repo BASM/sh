@@ -1,4 +1,4 @@
-OPT=-Os
+OPT=-Os -ggdb3
 
 WFLAGS+= -Wall -Werror #-Wmissing-prototypes
 #CFLAGS+= $(WFLAGS) -Igensrc -I$(LIBDIR)/shlib/include
@@ -6,6 +6,7 @@ CFLAGS+= $(OPT) $(WFLAGS) -Igensrc -Isrc
 CFLAGS+= ${GCCBOARDNAME}
 CFLAGS+= -I${SCRIPTDIR}/templates
 
+include $(SCRIPTDIR)/../libs/pio/build.mk
 
 ifeq ($(HOST),1)
 GENOPT=--host
@@ -48,9 +49,9 @@ lib/lib$(BOARD)$(DEPOPT).a: $(BLIBOBJ)
 obj/%${OBJPREF}.o: gensrc/%${OBJPREF}.cc
 	@mkdir -p obj
 	echo BUILD $@
-	${CXX} -c $(CFLAGS) -o $@ $<
+	${CXX} ${INCLUDES} -c $(CFLAGS) -o $@ $<
 
-obj/%${OBJPREF}.o: ${SCRIPTDIR}/templates/%${OBJPREF}.cc 
+obj/%${OBJPREF}.o: ${SCRIPTDIR}/templates/%${OBJPREF}.cc
 	@mkdir -p obj
 	${CXX} ${INCLUDES} -c $(CFLAGS) -o $@ $<
 
