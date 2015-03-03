@@ -35,7 +35,7 @@ OBJPREF=_${ARCH}
 endif
 
 
-BLIBOBJ=obj/${ICNAME}clases$(OBJPREF).o
+BLIBOBJ+=obj/${ICNAME}clases$(OBJPREF).o
 BLIBOBJ+=obj/shclass${OBJPREF}.o
 
 

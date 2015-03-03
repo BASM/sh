@@ -1,9 +1,9 @@
 #MAKE=remake -x ${NOPRINTDIR}
 MAKE=make ${NOPRINTDIR}
 
-
-ALLDST+=$(foreach i,$(DST),$i host_$i)
-#ALLDST+=$(DST)
+ALLDST+=$(DST:%.exe=%.hex)
+#ALLDST+=$(DST:%=host_%)
+#ALLDST+=$(foreach i,$(DST),$i host_$i)
 
 
 TBIN=$(@:host_%=%)
@@ -16,7 +16,12 @@ TICNAME=$(lastword $(subst _, ,${TBOARD}))
 all: $(ALLDST)
 
 ifeq ($(REALRUN),)
-$(ALLDST):
+#$(ALLDST):
+%.hex: %.exe
+	avr-objcopy -j .text -j .data -O ihex sproto.exe sproto.hex
+	avr-size $<
+
+%.exe: 
 	@mkdir -p gensrc
 	if [ "${THOST}" = "0" ] ; then \
 		$(BGEN) $(TBOARDNAME).yml ${TICNAME} ; \
