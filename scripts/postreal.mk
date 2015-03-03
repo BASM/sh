@@ -13,10 +13,12 @@ GENOPT=--host
 DEPOPT=_host
 CXX=g++
 AR=ar
-OBJS=${${BIN}-OBJS:%.o=%_host.o}
+OBJS+=${${BIN}-OBJS:%.o=%_host.o}
+OBJS+=${${BIN}-OBJS-host:%.o=%_host.o}
 else
 INCLUDES+= -include avr/io.h
-OBJS=${${BIN}-OBJS:%.o=%_avr.o}
+OBJS+=${${BIN}-OBJS:%.o=%_avr.o}
+OBJS+=${${BIN}-OBJS-avr:%.o=%_avr.o}
 ifeq (${BOARDNAME},at328)
 GCCBOARDNAME=-mmcu=atmega328
 ARCH=avr
