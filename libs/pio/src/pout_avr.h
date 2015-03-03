@@ -5,11 +5,15 @@ class POUT_AVR : public POUT {
   typeof(PORTB) *port;
   int            bit;
   
-  POUT (typeof(ddr) d, typeof(port) p, int b) {
+  POUT_AVR (typeof(ddr) d, typeof(port) p, int b) {
     ddr=d;
     port=p;
     bit=b;
     init();
   };
+  void init(void);
+  void set(fint val);
+  void set(void);
+  void clr(void);
 
 };

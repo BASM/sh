@@ -1,11 +1,15 @@
+#ifndef __POUT_H__
+#define __POUT_H__
+
 #include "shclass.h"
 
-class POUT {
+class aPOUT {
   public:
-  POUT () {};
-  void init(void);
-  void set(fint val);
-  void set(void) {};
-  void clr(void) {};
+  aPOUT () {};
+  virtual void init(void);
+  virtual void set(fint val);
+  virtual void set(void);
+  virtual void clr(void);
 };
 
+#endif // __POUT_H__
