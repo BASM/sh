@@ -3,7 +3,7 @@ include ../../scripts/build.mk
 DST=sproto.exe
 
 sproto.exe-BOARD=at328_sw
-sproto.exe-OBJS=main.o
+sproto.exe-OBJS=main.o avr.o
 
 PRE=clean
 
