@@ -14,6 +14,7 @@ TBOARDNAME=$(firstword $(subst _, ,${TBOARD}))
 TICNAME=$(lastword $(subst _, ,${TBOARD}))
 
 .PHONY: rebuild
+.SECONDARY: $(DST)
 
 all: $(ALLDST)
 
@@ -40,7 +41,6 @@ ifeq ($(REALRUN),)
 	BOARD="${TBOARD}" \
 	BOARDNAME="${TBOARDNAME}" \
 	ICNAME="${TICNAME}" ${MAKE} $@
-	cp $@ $@.bak
 else
 include $(SCRIPTDIR)/postreal.mk
 endif
