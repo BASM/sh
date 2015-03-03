@@ -68,7 +68,7 @@ class POUT_Gen < PINOUT_Gen
 end
 
 #$piosdb["PIN"]=PIN_Gen
-$piosdb["POUT"]=POUT_Gen
+#$piosdb["POUT"]=POUT_Gen
 
 
 =begin
