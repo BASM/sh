@@ -13,7 +13,12 @@ TBOARD=$(${TBIN}-BOARD)
 TBOARDNAME=$(firstword $(subst _, ,${TBOARD}))
 TICNAME=$(lastword $(subst _, ,${TBOARD}))
 
+.PHONY: rebuild
+
 all: $(ALLDST)
+
+rebuild:
+	true
 
 ifeq ($(REALRUN),)
 #$(ALLDST):
@@ -21,7 +26,7 @@ ifeq ($(REALRUN),)
 	avr-objcopy -j .text -j .data -O ihex sproto.exe sproto.hex
 	avr-size $<
 
-%.exe: 
+%.exe: rebuild
 	@mkdir -p gensrc
 	if [ "${THOST}" = "0" ] ; then \
 		$(BGEN) $(TBOARDNAME).yml ${TICNAME} ; \
