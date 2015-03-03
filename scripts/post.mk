@@ -40,6 +40,7 @@ ifeq ($(REALRUN),)
 	BOARD="${TBOARD}" \
 	BOARDNAME="${TBOARDNAME}" \
 	ICNAME="${TICNAME}" ${MAKE} $@
+	cp $@ $@.bak
 else
 include $(SCRIPTDIR)/postreal.mk
 endif

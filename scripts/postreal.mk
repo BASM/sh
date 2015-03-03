@@ -39,8 +39,9 @@ BLIBOBJ+=obj/${ICNAME}clases$(OBJPREF).o
 BLIBOBJ+=obj/shclass${OBJPREF}.o
 
 
-$(BINREAL):  ${OBJS} lib/lib$(BOARD)$(DEPOPT).a
-	${CXX} ${OPT} -o $@ $^
+#deps: lib/lib$(BOARD)$(DEPOPT).a
+$(BINREAL):  ${OBJS} 
+	${CXX} ${OPT} ${CFLAGS} -o $@ $^
 
 lib/lib$(BOARD)$(DEPOPT).a: $(BLIBOBJ)
 	mkdir -p lib
