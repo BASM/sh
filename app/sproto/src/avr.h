@@ -30,14 +30,14 @@ class BUTTON {
 
 };
 
-class LED {
+class POUT {
   typeof(DDRB)  *ddr;
   typeof(PORTB) *port;
   int            bit;
 
   public:
 
-  LED() {}
+  POUT() {}
   
   void init(typeof(ddr) d, typeof(port) p, int b) {
     ddr=d;
@@ -59,9 +59,10 @@ class MCU_PROTO {
   public:
   BUTTON b1;
 //  BUTTON b2;
-  LED l1;
-//  RELAY r1;
-//  RELAY r2;
+  POUT l1;
+  POUT r1;
+  POUT r2;
   MCU_PROTO();
   void sleep_s(int i) {_delay_ms(1000*i); }
+  void sleep_ms(int i) {_delay_ms(i);}
 };

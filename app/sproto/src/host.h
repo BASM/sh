@@ -44,5 +44,6 @@ class MCU_PROTO {
   LED l1;
 //  RELAY r1;
 //  RELAY r2;
-  void sleep_s(int i) {usleep(i); }
+  void sleep_s(int i) {usleep(i*1000*1000); }
+  void sleep_ms(int i) {usleep(i*1000); }
 };
