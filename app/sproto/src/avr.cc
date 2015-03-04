@@ -10,4 +10,5 @@ MCU_PROTO::MCU_PROTO () {
   r1.init(&DDRC, &PORTC, 0);
   r2.init(&DDRC, &PORTC, 0);
   b1.init(&DDRD, &PORTD, &PIND, 3);
+  b2.init(&DDRD, &PORTD, &PIND, 4);
 }

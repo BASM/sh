@@ -3,7 +3,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-class BUTTON {
+class PIN {
   typeof(DDRB)  *ddr;
   typeof(PORTB) *port;
   typeof(PINB)  *pin;
@@ -11,7 +11,7 @@ class BUTTON {
 
   public:
 
-  BUTTON() {}
+  PIN() {}
   
   void init(typeof(ddr) d, typeof(port) po, typeof(pin) pi, int b) {
     ddr=d;
@@ -57,8 +57,8 @@ class POUT {
 
 class MCU_PROTO {
   public:
-  BUTTON b1;
-//  BUTTON b2;
+  PIN b1;
+  PIN b2;
   POUT l1;
   POUT r1;
   POUT r2;
