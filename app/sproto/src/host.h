@@ -18,13 +18,13 @@ class BUTTON {
 
 };
 
-class LED {
+class POUT {
   char pname[0x20];
   int  val;
 
   public:
 
-  LED() {}
+  POUT() {}
 
   void init(const char *name, int val) {
     strcpy(pname,name);
@@ -41,9 +41,9 @@ class MCU_PROTO {
   MCU_PROTO();
   BUTTON b1;
 //  BUTTON b2;
-  LED l1;
-//  RELAY r1;
-//  RELAY r2;
+  POUT l1;
+  POUT r1;
+  POUT r2;
   void sleep_s(int i) {usleep(i*1000*1000); }
   void sleep_ms(int i) {usleep(i*1000); }
 };
