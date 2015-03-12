@@ -5,7 +5,7 @@ $piosdb={}
 ## FIXME dynamic create
 require "#{TOPDIR}/libs/rs485/generate"
 require "#{TOPDIR}/libs/uart/generate"
-require "#{TOPDIR}/libs/pio/generate"
+require "#{TOPDIR}/libs/pio/generate" 
 
 #FIXME
 TMLDIR="#{$:[0]}/templates"

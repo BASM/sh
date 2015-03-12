@@ -75,9 +75,9 @@ end
 #FIXME REMOVE IT!!
 # only for migrate to the new generator
 # Only generate() must be called.
-if conf[:host] != nil
-  brd.generate(conf[:icname])
-else
+if conf[:host] == true
   brd.generate_host(conf[:icname])
+else
+  brd.generate(conf[:icname])
 end
 
