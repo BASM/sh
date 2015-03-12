@@ -3,13 +3,10 @@
 
 #include "shclass.h"
 
-class aPOUT {
-  public:
-  aPOUT () {};
-  virtual void init(void);
-  virtual void set(fint val);
-  virtual void set(void);
-  virtual void clr(void);
-};
+#ifdef __AVR_ARCH__
+#include "pout_avr.h"
+#else
+#include "pout_host.h"
+#endif
 
 #endif // __POUT_H__

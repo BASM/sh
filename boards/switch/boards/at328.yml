@@ -5,12 +5,12 @@ IC:
     TYPE: ATMEGA328P
     FREQ: 12 000 000
     PIOS:
-      BUTTONS:
+      buttons:
         TYPE: PIN
         PINS:
-          But1: PD4
-          But2: PD3
-          But3: PD2
+          b1: PD4
+          b2: PD3
+          b3: PD2
 
       rs:
         TYPE: RS485
@@ -28,19 +28,19 @@ IC:
           GND:
           RESET:
 
-      RELAY:
+      relay:
         TYPE: POUT
         PINS:
-          R8: PB4
-          R7: PB3
-          R6: PB2
-          R5: PB1
-          R4: PB0
-          R3: PD7
-          R2: PD6
-          R1: PD5
+          r8: PB4
+          r7: PB3
+          r6: PB2
+          r5: PB1
+          r4: PB0
+          r3: PD7
+          r2: PD6
+          r1: PD5
 
-      LEDS:
+      leds:
         TYPE: POUT
         PINS:
           l1: PC0

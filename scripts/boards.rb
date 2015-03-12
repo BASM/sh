@@ -179,10 +179,7 @@ class Boards
 
     @name = @yml["NAME"]
     @ic={}
-    @yml["IC"].each{ |name,obj| 
-      #puts "==========IC: #{name} -- OBJ #{obj}====="
-      @ic[name]=IC.new(name,obj)
-    }
+    @yml["IC"].each{ |name,obj|  @ic[name]=IC.new(name,obj) }
   end
 
   def generate(icname)

@@ -1,8 +1,5 @@
 #include "avr.h"
 
-void POUT::set() { *port |= 1<<bit; };
-void POUT::clr() { *port &= ~(1<<bit); };
-
 MCU_PROTO::MCU_PROTO () {
   wdt_disable();
   cli();

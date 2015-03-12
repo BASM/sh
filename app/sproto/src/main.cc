@@ -3,21 +3,22 @@
 
 
 int main(void) {
-  MCU_PROTO ic;
+  MCU_sw ic;
+  MCU_PROTO legacy;
 
   //printf("HELLO SPROTO\n");
 
-  ic.l1.set();
+  ic.leds.l1.set();
 
   while (1) {
-    if (ic.b1.isOn() != ic.b2.isOn()) {
-      ic.l1.clr();
-      ic.r1.set();
+    if (legacy.b1.isOn() != legacy.b2.isOn()) {
+      ic.leds.l1.clr();
+      ic.relay.r1.set();
     } else {
-      ic.l1.set();
-      ic.r1.clr();
+      ic.leds.l1.set();
+      ic.relay.r1.clr();
     }
-    ic.sleep_ms(100);
+    legacy.sleep_ms(100);
   }
 
   return 0;

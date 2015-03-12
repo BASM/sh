@@ -30,30 +30,6 @@ class PIN {
 
 };
 
-class POUT {
-  typeof(DDRB)  *ddr;
-  typeof(PORTB) *port;
-  int            bit;
-
-  public:
-
-  POUT() {}
-  
-  void init(typeof(ddr) d, typeof(port) p, int b) {
-    ddr=d;
-    port=p;
-    bit=b;
-
-    //*ddr &= ~(1<<bit);
-    *ddr  |= 1<<bit;
-    *port |= 1<<bit;
-  }
-
-  void set();
-  void clr();
-
-};
-
 
 class MCU_PROTO {
   public:

@@ -16,29 +16,41 @@ class PINOUT_Gen
     @obj=obj
     @cc=cc
     @h=h
-    objname=obj.name
+    @objname=obj.name
 
     fpref = "host_" if mode == :host
     @obj.pins.each{ |name,port|
       #cclist.each{ |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,cc) }
       #hlist.each { |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,h ) }
     }
-    classgen(obj,h)
+    classgen(obj,cc,h)
   end
 
   def name()
     @name
   end
 
-  def classgen(obj,h)
+  def classgen(obj,cc,h)
     h.write <<-EOF
-class #{cname}_#{obj.name} {
+class #{cname} {
   public:
+  #{cname}();
+
 EOF
+
+    cc.write <<-EOF
+#{cname}::#{cname}() {
+
+EOF
+
     @obj.pins.each{ |name,port| 
-      h.write "\t#{cname()} #{name};\n"
+      b,bit=port.scan(/P(.)(.)/)[0]
+      h.write "\t#{cclass} #{name};\n"
+      cc.write("\t#{name}.init(&DDR#{b},&PORT#{b},#{bit});\n" )
     }
     h.write("};\n")
+    cc.write("};\n")
+
   end
 end
 
@@ -62,13 +74,16 @@ class POUT_Gen < PINOUT_Gen
   def hlist
     return ["pout.h"]
   end
-  def cname
+  def cclass
     return "POUT"
+  end
+  def cname
+    return "POUT_#{@objname}"
   end
 end
 
 #$piosdb["PIN"]=PIN_Gen
-#$piosdb["POUT"]=POUT_Gen
+$piosdb["POUT"]=POUT_Gen
 
 
 =begin
