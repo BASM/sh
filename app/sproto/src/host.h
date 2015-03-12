@@ -40,7 +40,7 @@ class MCU_PROTO {
   public:
   MCU_PROTO();
   BUTTON b1;
-//  BUTTON b2;
+  BUTTON b2;
   POUT l1;
   POUT r1;
   POUT r2;

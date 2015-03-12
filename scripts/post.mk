@@ -30,9 +30,9 @@ ifeq ($(REALRUN),)
 %.exe: rebuild
 	@mkdir -p gensrc
 	if [ "${THOST}" = "0" ] ; then \
-		$(BGEN) $(TBOARDNAME).yml ${TICNAME} ; \
+		$(BGEN) -b $(TBOARDNAME).yml -i ${TICNAME} ; \
 		else \
-		$(BGEN) $(TBOARDNAME).yml --host ${TICNAME} ; \
+		$(BGEN) -b $(TBOARDNAME).yml --host -i ${TICNAME} ; \
 		fi
 	REALRUN="1" \
 	BINREAL="$@" \

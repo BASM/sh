@@ -52,9 +52,7 @@ class PIO
       puts "Unknown type '#{@type}'"
     end
     return if obj == nil
-    cname ="#{@type}_#{@name}"
-
-    obj.new(self,cc,h,mode).cname
+    cname = obj.new(self,cc,h,mode).cname
 
     [cname,@name]
   end
@@ -174,8 +172,8 @@ class Boards
     exit 0
   end
 
-  def initialize(filename)
-    f = findopenymlfile(filename)
+  def initialize(conf)
+    f = findopenymlfile(conf[:board])
     @yml = YAML.load(f)
     f.close()
 

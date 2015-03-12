@@ -8,4 +8,5 @@ MCU_PROTO::MCU_PROTO () {
   r1.init("PORT C0 REL1",0);
   r2.init("PORT C0 REL2",0);
   b1.init("PORT D4");
+  b1.init("PORT HZ");
 }
