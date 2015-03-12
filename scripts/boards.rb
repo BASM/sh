@@ -95,6 +95,7 @@ EOF
 #include "shclass.h"
 #include "shtype.h"
 #include <pout.h> //XXX FIXME autogen from pio
+#include <pin.h> //XXX FIXME autogen from pio
 EOF
   end
 

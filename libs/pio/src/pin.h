@@ -4,16 +4,9 @@
 #include "shclass.h"
 #include "shtype.h"
 
-class PIN {
-  typeof(DDRB)  *ddr;
-  typeof(PORTB) *port;
-  int           bit;
-  public:
-  POUT (typeof(ddr) d, typeof(port) p) {
-    ddr=d;
-    port=p;
-    *ddr &= ~(1<<bit);
-  };
-  __attribute__((always_inline)) inline void set()      {*port |= 1<<bit;}
-  __attribute__((always_inline)) inline void clr()      {*port &= 1<<bit;}
-};
+#ifdef __AVR_ARCH__
+#include "pin_avr.h"
+#else
+#include "pin_host.h"
+#endif
+

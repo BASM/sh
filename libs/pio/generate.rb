@@ -44,9 +44,8 @@ EOF
 EOF
 
     @obj.pins.each{ |name,port| 
-      b,bit=port.scan(/P(.)(.)/)[0]
       h.write "\t#{cclass} #{name};\n"
-      cc.write("\t#{name}.init(&DDR#{b},&PORT#{b},#{bit});\n" )
+      cc.write(initstr(name,port))
     }
     h.write("};\n")
     cc.write("};\n")
@@ -62,8 +61,15 @@ class PIN_Gen < PINOUT_Gen
   def hlist
    ["pin.h"]
   end
-  def cname
+  def cclass
     return "PIN"
+  end
+  def initstr(name,port)
+      b,bit=port.scan(/P(.)(.)/)[0]
+      "\t#{name}.init(&DDR#{b},&PORT#{b},&PIN#{b},#{bit});\n"
+  end
+  def cname
+    return "PIN_#{@objname}"
   end
 end
 
@@ -74,6 +80,10 @@ class POUT_Gen < PINOUT_Gen
   def hlist
     return ["pout.h"]
   end
+  def initstr(name,port)
+      b,bit=port.scan(/P(.)(.)/)[0]
+      "\t#{name}.init(&DDR#{b},&PORT#{b},#{bit});\n"
+  end
   def cclass
     return "POUT"
   end
@@ -82,7 +92,7 @@ class POUT_Gen < PINOUT_Gen
   end
 end
 
-#$piosdb["PIN"]=PIN_Gen
+$piosdb["PIN"]=PIN_Gen
 $piosdb["POUT"]=POUT_Gen
 
 
