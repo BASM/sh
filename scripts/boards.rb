@@ -27,7 +27,7 @@ $FGEN=[]
 #  @type -- TYPE of class
 #  PINS -- one port IO
 class PIO
-  attr :name,:pins,:pin,:obj
+  attr_reader :name,:pins,:pin,:obj
   def initialize(main,pio,name)
     @pins=pio["PINS"]
     @pin=pio["PIN"]
@@ -59,7 +59,7 @@ end
 #  FREQ
 #  PIDS -- list of IO
 class IC
-  attr :name,:mode,:cc,:h
+  attr_reader :name,:mode,:cc,:h
   def initialize(name, ic)
     @constructor_list=[]
     @name=name
