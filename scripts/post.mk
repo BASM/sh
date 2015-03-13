@@ -2,7 +2,7 @@
 MAKE=make ${NOPRINTDIR}
 
 ALLDST+=$(DST:%.exe=%.hex)
-#ALLDST+=$(DST:%=host_%)
+ALLDST+=$(DST:%=host_%)
 #ALLDST+=$(foreach i,$(DST),$i host_$i)
 
 
