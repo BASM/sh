@@ -47,4 +47,4 @@ endif
 
 
 clean:
-	rm -Rf lib obj gensrc $(ALLDST)
+	rm -Rf lib obj gensrc $(ALLDST) $(DST)
