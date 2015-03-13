@@ -8,14 +8,14 @@ int main(void) {
 
   //printf("HELLO SPROTO\n");
 
-  ic.leds.l1.set();
+  ic.led.set();
 
   while (1) {
     if (ic.buttons.b1.isOn() != ic.buttons.b2.isOn()) {
-      ic.leds.l1.clr();
+      ic.led.clr();
       ic.relay.r1.set();
     } else {
-      ic.leds.l1.set();
+      ic.led.set();
       ic.relay.r1.clr();
     }
     _delay_ms(100);

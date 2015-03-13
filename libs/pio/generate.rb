@@ -1,66 +1,50 @@
-
 PIODIR="#{TOPDIR}/libs/pio"
 
 class PINOUT_Gen
-  def erbrun(fname,name,port,outf)
-        @erb = erb_read(fname)
-        num,bit=port.scan(/P(.)(.)/)[0]
-        @ddr="DDR#{num}"
-        @port="PORT#{num}"
-        @pin="PIN#{num}"
-        @bit=bit
-        @name=name
-        outf.write(@erb.result(binding))
-  end
-  def initialize(obj,cc,h,mode)
+  def initialize(main,obj)
     @obj=obj
-    @cc=cc
-    @h=h
+    @cc=main.cc()
+    #puts main.inspect
+    @h=main.h()
     @objname=obj.name
+    @single=false
+    @single=true if @obj.pins == nil
 
-    fpref = "host_" if mode == :host
-    @obj.pins.each{ |name,port|
-      #cclist.each{ |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,cc) }
-      #hlist.each { |fname|  erbrun("#{PIODIR}/tmpl/#{fpref}#{fname}.erb",name,port,h ) }
-    }
-    classgen(obj,cc,h)
-  end
+    fpref = "host_" if main.mode == :host
 
-  def name()
-    @name
-  end
-
-  def classgen(obj,cc,h)
-    h.write <<-EOF
+    if @single == false
+      @h.write <<-EOF
 class #{cname} {
   public:
   #{cname}();
 
 EOF
-
-    cc.write <<-EOF
+      @cc.write <<-EOF
 #{cname}::#{cname}() {
 
 EOF
+      @obj.pins.each{ |name,port| 
+        @h.write "\t#{cclass} #{name};\n"
+        @cc.write(initstr(name,port))
+      }
+      @h.write("};\n")
+      @cc.write("};\n")
+    else
+      puts @obj.pin
+      puts "SINGLE MODE"
+      main.addtoinit(initstr(obj.name,@obj.pin))
+    end
 
-    @obj.pins.each{ |name,port| 
-      h.write "\t#{cclass} #{name};\n"
-      cc.write(initstr(name,port))
-    }
-    h.write("};\n")
-    cc.write("};\n")
 
+  end
+
+  def name()
+    @name
   end
 end
 
 
 class PIN_Gen < PINOUT_Gen
-  def cclist
-    []
-  end
-  def hlist
-   ["pin.h"]
-  end
   def cclass
     return "PIN"
   end
@@ -69,17 +53,12 @@ class PIN_Gen < PINOUT_Gen
       "\t#{name}.init(&DDR#{b},&PORT#{b},&PIN#{b},#{bit});\n"
   end
   def cname
+    return cclass if @single == true
     return "PIN_#{@objname}"
   end
 end
 
 class POUT_Gen < PINOUT_Gen
-  def cclist
-    return []
-  end
-  def hlist
-    return ["pout.h"]
-  end
   def initstr(name,port)
       b,bit=port.scan(/P(.)(.)/)[0]
       "\t#{name}.init(&DDR#{b},&PORT#{b},#{bit});\n"
@@ -88,40 +67,10 @@ class POUT_Gen < PINOUT_Gen
     return "POUT"
   end
   def cname
+    return cclass if @single == true
     return "POUT_#{@objname}"
   end
 end
 
 $piosdb["PIN"]=PIN_Gen
 $piosdb["POUT"]=POUT_Gen
-
-
-=begin
-class UART_Gen
-  def erb_read(fname)
-  fd = File.open(fname);
-  erb = ERB.new(fd.read);
-  fd.close()
-  erb
-  end
-
-  def initialize(obj,cc,h)
-  erb = erb_read("#{UARTDIR}/tmpl/uart.h.erb");
-  @name=obj.name
-  h.write(erb.result(binding))
-
-  erb = erb_read("#{UARTDIR}/tmpl/uart.cc.erb");
-  @baud=obj.bd["BAUD"]
-  @name=obj.name
-  cc.write(erb.result(binding))
-  end
-
-  def cname
-    return "UART"
-  end
-end
-
-
-$piosdb["UART"]=UART_Gen
-puts "HI "
-=end

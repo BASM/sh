@@ -27,20 +27,14 @@ $FGEN=[]
 #  @type -- TYPE of class
 #  PINS -- one port IO
 class PIO
-  def name
-    @name
-  end
-  def pins
-    @pins
-  end
-  def bd
-    @obj
-  end
-  def initialize(pio,name)
+  attr :name,:pins,:pin,:obj
+  def initialize(main,pio,name)
     @pins=pio["PINS"]
+    @pin=pio["PIN"]
     @type=pio["TYPE"]
     @name=name
     @obj=pio
+    @main=main
   end
   def generate(cc,h,mode)
     puts ">> Generate #{@name} type #{@type}:"
@@ -52,7 +46,7 @@ class PIO
       puts "Unknown type '#{@type}'"
     end
     return if obj == nil
-    cname = obj.new(self,cc,h,mode).cname
+    cname = obj.new(@main,self).cname
 
     [cname,@name]
   end
@@ -65,7 +59,9 @@ end
 #  FREQ
 #  PIDS -- list of IO
 class IC
+  attr :name,:mode,:cc,:h
   def initialize(name, ic)
+    @constructor_list=[]
     @name=name
     @type=ic["TYPE"]
     @pios=[]
@@ -73,11 +69,11 @@ class IC
     @FREQ=ic["FREQ"].split.join + "L"
     icpio=ic["PIOS"]
     icpio.each{ |name,pio| 
-      cp = PIO.new(pio,name)
+      cp = PIO.new(self,pio,name)
       @pios+=[cp]
     }
   end
-  def writeheaders(cc,h,hfname,mode)
+  def writeheaders(cc,h,hfname)
     hostpref="_avr"
 
     if mode == :host
@@ -99,11 +95,13 @@ EOF
 EOF
   end
 
-  def name()
-    @name
+  def addtoinit(str)
+    @constructor_list+=[str]
+    #puts "ADD TO INIT '#{str}'"
   end
 
   def generate(mode)
+    @mode=mode
     if mode == :host
       ccfname="gensrc/#{@name}clases_host.cc"
       hfname ="gensrc/#{@name}clases_host.h"
@@ -117,12 +115,14 @@ EOF
     $FGEN += [ccfname]
     genfile_cc=File.open(ccfname,"w")
     genfile_h =File.open(hfname ,"w")
+    @cc=genfile_cc
+    @h =genfile_h
 
     genfile_h.write <<-EOF
 #define F_CPU #{@FREQ}
 EOF
 
-    writeheaders(genfile_cc, genfile_h, hfname_inc, mode)
+    writeheaders(genfile_cc, genfile_h, hfname_inc)
     @PIOS=[]
     
     puts "> IC name #{@name}, type #{@type}:" 
@@ -135,6 +135,7 @@ EOF
     fd.write <<-EOF
 class MCU_#{@name} : public MCU {
     public:
+    MCU_#{@name}();
 
     STDIO  stdio;
 EOF
@@ -143,6 +144,13 @@ EOF
     fd.write("};\n")
     fd.write("#endif \n")
 
+    @cc.write <<-EOF
+MCU_#{@name}::MCU_#{@name}() {
+
+EOF
+    @constructor_list.each{ |str| @cc.write(str) }
+
+    @cc.write("};\n");
     return [@name,@type]
   end
 end
@@ -190,6 +198,7 @@ class Boards
 
   def generate_host(icname)
     @ic[icname].generate(:host)
+    STDERR.puts $FGEN
   end
 
   def iclist()

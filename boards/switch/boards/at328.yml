@@ -40,7 +40,6 @@ IC:
           r2: PD6
           r1: PD5
 
-      leds:
+      led:
         TYPE: POUT
-        PINS:
-          l1: PC0
+        PIN:  PC0
