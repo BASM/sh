@@ -31,8 +31,6 @@ EOF
       @h.write("};\n")
       @cc.write("};\n")
     else
-      puts @obj.pin
-      puts "SINGLE MODE"
       main.addtoinit(initstr(obj.name,@obj.pin))
     end
 

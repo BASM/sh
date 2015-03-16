@@ -71,16 +71,10 @@ EOF
   end
 
   def initstr(obj)
-    puts "INSPECT PIO"
-    puts obj.inspect
-
-
     "\t#{obj.name}.init();\n"
   end
 
   def cname
-    puts "*********************** iBAUD RATE #{@baud}"
-    puts "TYPE #{@type}"
     hwpref="_SW"
     hwpref="_HW" if @type == :hw
     resetpref="_RST" if @reset == true
