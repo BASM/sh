@@ -1,10 +1,10 @@
-CUR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+PIOCUR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-INCLUDES+=-I${CUR}/src
+CFLAGS+=-I${PIOCUR}/src
 
 BLIBOBJ+=obj/pout${OBJPREF}.o
 BLIBOBJ+=obj/pin${OBJPREF}.o
 #BLIBOBJ+= asdfasdfkjl
 
-obj/%${OBJPREF}.o: ${CUR}/src/%.cc
+obj/%${OBJPREF}.o: $(PIOCUR)/src/%.cc
 	${CXX} ${INCLUDES} -c ${CFLAGS} -o $@ $<

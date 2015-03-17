@@ -7,6 +7,7 @@ CFLAGS+= ${GCCBOARDNAME}
 CFLAGS+= -I${SCRIPTDIR}/templates
 
 include $(SCRIPTDIR)/../libs/pio/build.mk
+include $(SCRIPTDIR)/../libs/generic/build.mk
 
 ifeq ($(HOST),1)
 GENOPT=--host

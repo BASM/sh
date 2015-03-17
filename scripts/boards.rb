@@ -1,11 +1,13 @@
 require 'yaml'
 
 $piosdb={}
+$GENLIB=[]
 
 ## FIXME dynamic create
 require "#{TOPDIR}/libs/rs485/generate"
 require "#{TOPDIR}/libs/uart/generate"
 require "#{TOPDIR}/libs/pio/generate" 
+require "#{TOPDIR}/libs/generic/generate" 
 
 #FIXME
 TMLDIR="#{$:[0]}/templates"
@@ -93,6 +95,12 @@ EOF
 #include <pout.h> //XXX FIXME autogen from pio
 #include <pin.h> //XXX FIXME autogen from pio
 EOF
+  if mode != :host
+    h.write <<-EOF
+#define __DELAY_BACKWARD_COMPATIBLE__
+#include <util/delay.h>
+EOF
+  end
   end
 
   def addtoinit(str)
@@ -139,6 +147,10 @@ class MCU_#{@name} : public MCU {
 
     STDIO  stdio;
 EOF
+
+    $GENLIB.each{ |func| func.new(self) }
+
+    fd.write("\n\n")
     
     @PIOS.each{ |cname,name| fd.write("\t #{cname} #{name};\n");}
     fd.write("};\n")
