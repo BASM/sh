@@ -1,4 +1,1 @@
-class UART {
-  public:
- void putch(char ch);
-};
+#include <uart.h>

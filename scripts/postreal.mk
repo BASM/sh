@@ -40,7 +40,7 @@ endif
 
 
 BLIBOBJ+=obj/${ICNAME}clases$(OBJPREF).o
-BLIBOBJ+=obj/shclass${OBJPREF}.o
+#BLIBOBJ+=obj/shclass${OBJPREF}.o
 
 $(BINREAL): ${OBJS} lib/lib$(BOARD)$(DEPOPT).a
 	${CXX} ${OPT} ${CFLAGS} -o $@ $^

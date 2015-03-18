@@ -4,7 +4,6 @@
 int main(void) {
   MCU_sw ic;
 
-  //printf("HELLO SPROTO\n");
   ic.led.set();
 
   ic.Uart.putch('H');
@@ -12,6 +11,10 @@ int main(void) {
   ic.Uart.putch('l');
   ic.Uart.putch('l');
   ic.Uart.putch('o');
+
+  ic.stdio.setio(&ic.Uart);
+
+  printf("Hello world from printf\n");
 
   while (1) {
     if (ic.buttons.b1.isOn() != ic.buttons.b2.isOn()) {

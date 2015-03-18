@@ -92,6 +92,7 @@ EOF
 #include <inttypes.h>
 #include "shclass.h"
 #include "shtype.h"
+#include <generic.h> //XXX FIXME autogen from generic
 #include <pout.h> //XXX FIXME autogen from pio
 #include <pin.h> //XXX FIXME autogen from pio
 EOF
@@ -139,8 +140,8 @@ EOF
     }
 
     fd = genfile_h
-    fd.write <<-EOF
-class MCU_#{@name} : public MCU {
+    fd.write <<-EOF #: public MCU
+class MCU_#{@name}  {
     public:
     MCU_#{@name}();
 
