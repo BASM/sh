@@ -5,8 +5,13 @@ int main(void) {
   MCU_sw ic;
 
   //printf("HELLO SPROTO\n");
-
   ic.led.set();
+
+  ic.Uart.putch('H');
+  ic.Uart.putch('e');
+  ic.Uart.putch('l');
+  ic.Uart.putch('l');
+  ic.Uart.putch('o');
 
   while (1) {
     if (ic.buttons.b1.isOn() != ic.buttons.b2.isOn()) {

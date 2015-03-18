@@ -7,7 +7,8 @@ class UART_Gen
 
   def write_host
     @main.h.write <<-EOF
-class #{cname} {
+    #include <uart_host.h>
+class #{cname} : public UART {
 };
 EOF
   
@@ -15,10 +16,12 @@ EOF
 
   def write
     @main.h.write <<-EOF
-class #{cname} {
+    #include <uart_avr.h>
+class #{cname} : public UART {
       public:
         #{cname} ();
         void init(void);
+        //void putch(char c);
 };
       
 EOF

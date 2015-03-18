@@ -105,7 +105,6 @@ EOF
 
   def addtoinit(str)
     @constructor_list+=[str]
-    #puts "ADD TO INIT '#{str}'"
   end
 
   def generate(mode)

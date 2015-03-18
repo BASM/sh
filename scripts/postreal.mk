@@ -8,6 +8,7 @@ CFLAGS+= -I${SCRIPTDIR}/templates
 
 include $(SCRIPTDIR)/../libs/pio/build.mk
 include $(SCRIPTDIR)/../libs/generic/build.mk
+include $(SCRIPTDIR)/../libs/uart/build.mk
 
 ifeq ($(HOST),1)
 GENOPT=--host
