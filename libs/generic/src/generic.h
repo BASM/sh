@@ -1,7 +1,7 @@
 
 class IO {
   public:
-    virtual void putch(char ch);
+    virtual void putch(char ch)=0;
     //virtual fint getch(void);
 };
 

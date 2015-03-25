@@ -5,6 +5,7 @@ WFLAGS+= -Wall -Werror #-Wmissing-prototypes
 CFLAGS+= $(OPT) $(WFLAGS) -Igensrc -Isrc
 CFLAGS+= ${GCCBOARDNAME}
 CFLAGS+= -I${SCRIPTDIR}/templates
+CFLAGS+=-fno-exceptions
 
 include $(SCRIPTDIR)/../libs/pio/build.mk
 include $(SCRIPTDIR)/../libs/generic/build.mk
