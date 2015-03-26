@@ -1,11 +1,11 @@
 
 void
 UART::putch(char ch) {
-  printf("Put char: %c\n", ch);
+  printf("UART put char: %c\n", ch);
 }
 
 fint
 UART::getch(bool block) {
-  printf("Get char\n");
+  printf("UART get char\n");
   return 0;
 }

@@ -6,15 +6,15 @@ int main(void) {
 
   ic.led.set();
 
-  ic.Uart.putch('H');
-  ic.Uart.putch('e');
-  ic.Uart.putch('l');
-  ic.Uart.putch('l');
-  ic.Uart.putch('o');
+  //ic.Uart.putch('H');
+  //ic.Uart.putch('e');
+  //ic.Uart.putch('l');
+  //ic.Uart.putch('l');
+  //ic.Uart.putch('o');
 
   ic.stdio.setio(&ic.Uart);
 
-  printf("Hello world from printf\n");
+  icprintf("Hello world from printf\n");
 
   while (1) {
     if (ic.buttons.b1.isOn() != ic.buttons.b2.isOn()) {

@@ -16,7 +16,7 @@ TICNAME=$(lastword $(subst _, ,${TBOARD}))
 .PHONY: rebuild
 .SECONDARY: $(DST)
 
-all: $(ALLDST)
+all: $(ALLDST) $(POSTRUN)
 
 rebuild:
 	true
