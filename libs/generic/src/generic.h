@@ -2,7 +2,7 @@
 class IO {
   public:
     virtual void putch(char ch)=0;
-    //virtual fint getch(void);
+    virtual fint getch(bool block)=0;
 };
 
 class STDIO {
