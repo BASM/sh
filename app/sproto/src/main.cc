@@ -3,15 +3,7 @@
 
 int main(void) {
   MCU_sw ic;
-
   ic.led.set();
-
-  //ic.Uart.putch('H');
-  //ic.Uart.putch('e');
-  //ic.Uart.putch('l');
-  //ic.Uart.putch('l');
-  //ic.Uart.putch('o');
-
   ic.stdio.setio(&ic.Uart);
 
   icprintf("Hello world from printf\n");
