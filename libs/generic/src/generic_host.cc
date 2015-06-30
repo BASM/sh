@@ -1,4 +1,13 @@
+#include <stdlib.h>
+#include <string>
 #include <unistd.h>
+#include <sys/types.h>          /* See NOTES */
+#include <sys/socket.h>
+#include <netdb.h>
+
+//FIXME
+//#include <swclases_host.h>
+
 
 //extern FILE *icstdout;
 FILE* icstdout=NULL;
@@ -48,5 +57,84 @@ int STDIO::setio(IO *io) {
   }
   setvbuf(icstdout, NULL, _IONBF, 0);
   return 0;
+}
+
+//TODO move it to the MCU class
+class Gui {
+  int sock;
+  public:
+    Gui() {}
+    int con() {
+      int res;
+      int range=10;
+      int i;
+      struct addrinfo hints;
+      struct addrinfo *result, *rp;
+
+      sock=-1;
+
+      memset(&hints, 0, sizeof(struct addrinfo));
+      hints.ai_family = AF_UNSPEC;
+      hints.ai_socktype = SOCK_STREAM;
+      hints.ai_flags = 0;
+      hints.ai_protocol = 0;     
+
+      for (i=3000; i<(3000+range); i++) {
+        char servname[5]="3000";
+        snprintf(servname,5,"%i",i);
+        printf("Try %s port\n", servname);
+        res = getaddrinfo("localhost", servname, &hints, &result);
+        if (res != 0) {
+          perror("Getaddrinfo error");
+        }
+
+        for (rp = result; rp != NULL; rp= rp->ai_next) {
+          sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+          if (sock == -1) continue;
+          if (connect(sock, rp->ai_addr, rp->ai_addrlen) != -1)
+            break;
+          close(sock);
+          sock=-1;
+        }
+        freeaddrinfo(result);
+        if (sock!=-1) break;
+      }
+      return sock;
+    };
+    int usefile(std::string fname) {
+      int               res;
+      std::string str;
+
+      str = "ymlfile " + fname + "\n";
+
+      res = write(sock, str.c_str(), str.size());
+      if (res != (int) str.size() ) {
+        printf("Error to send command\n");
+      }
+      str = "test1\ntest2\ntest3\n";
+      res = write(sock, str.c_str(), str.size());
+      if (res != (int) str.size() ) {
+        printf("Error to send command\n");
+      }
+      return 0;
+    };
+};
+Gui gui;
+
+void
+MCU_sw::connect() {
+  int sock;
+  printf("Connecting....\n");
+
+  sock = gui.con();
+  if (sock == -1) {
+    printf("Error to connect: sock is: %i", sock);
+    perror("");
+    exit(1);
+  }
+  printf("Sock is: %i\n", sock);
+
+  gui.usefile(YMLNAME);
+  //sleep(3);
 }
 

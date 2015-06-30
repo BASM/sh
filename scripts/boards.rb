@@ -62,7 +62,8 @@ end
 #  PIDS -- list of IO
 class IC
   attr_reader :name,:mode,:cc,:h
-  def initialize(name, ic)
+  def initialize(name, ymlname, ic)
+    @ymlname=ymlname
     @constructor_list=[]
     @name=name
     @type=ic["TYPE"]
@@ -141,6 +142,7 @@ EOF
 
     fd = genfile_h
     fd.write <<-EOF #: public MCU
+#define YMLNAME "#{@ymlname}"
 class MCU_#{@name}  {
     public:
     MCU_#{@name}();
@@ -183,6 +185,7 @@ class Boards
       searchlist+=[fname]
       begin
         fd = File.open(fname)
+        @ymlname=fname
         return fd
       rescue 
       end
@@ -194,13 +197,14 @@ class Boards
   end
 
   def initialize(conf)
+    @ymlname=""
     f = findopenymlfile(conf[:board])
     @yml = YAML.load(f)
     f.close()
 
     @name = @yml["NAME"]
     @ic={}
-    @yml["IC"].each{ |name,obj|  @ic[name]=IC.new(name,obj) }
+    @yml["IC"].each{ |name,obj|  @ic[name]=IC.new(name,@ymlname,obj) }
   end
 
   def generate(icname)
