@@ -3,6 +3,11 @@ require 'Qt4'
 require 'yaml'
 require 'socket'
 
+
+# client type: 
+# * cli[:gui] -- GUI object
+# * cli[:net] -- network object
+
 def Flag(name, value, parent)
   puts "Flag: #{name} -- #{value}"
   if value==0
@@ -27,15 +32,6 @@ def MakeSlider(parent)
   slider.lineWidth=4
   slider.show
   slider
-end
-
-# Gate for Cmodel communication
-class CmodelGate
-  def initialize
-    
-
-  end
-
 end
 
 
@@ -64,9 +60,15 @@ class Cmodel < Qt::Dialog
   end
 
   def initialize(parent=nil)
+    @net=0
     @buttonidlist={}
     super(parent)
-    f = File.open("../boards/switch/boards/at328.yml")
+
+  end
+
+  def loadyml(path)
+    puts "Try to load #{path}"
+    f = File.open(path)#"../boards/switch/boards/at328.yml")
     @yml = YAML.load(f)
     f.close()
 
@@ -114,18 +116,65 @@ class Cmodel < Qt::Dialog
     self
   end
 
+  def setnet(netobj)
+	@net=netobj
+  end
+
 end
 
-#app = Qt::Application.new(ARGV)
 #wgt=Cmodel.new()
 #wgt.show
 #puts "Result: #{app}"
 #exit 0
-#app.exec
+
+# Connect NETWORK and GUI
+# clients-> [ {network, gui}, ....]
+class Clients
+	def initialize()
+		@clients={}
+		@app = Qt::Application.new(ARGV)
+		network
+	end	
+	def network()
+	@gate = nil
+	(3000..3010).each{ |i|
+		begin
+			@gate = ModeGate.new(self, :port=>i)
+		break
+		rescue Exception => e
+			puts "EX: #{e}"
+		next
+		end
+	}
+	puts "Gate is #{@gate}"
+	if @gate == nil
+ 		puts "Can't open socket!\n"
+                puts "Fatal"
+        end 
+	end
+	def newcli(net, args)
+		gui=Cmodel.new()
+		gui.setnet(net)
+		gui.loadyml(args[0])
+		gui.show()
+		return gui
+	end
+	def exec()
+	# XXX FIXME
+	loop do
+		@gate.iterate
+	end
+	@app.exec #nonblock?
+	end
+	def close()
+	@gate.close
+	end
+end
 
 
 class ModeGate
-  def initialize(hash)
+  def initialize(parent, hash)
+    @parent=parent
     @clients=[]
     @port = 3000
     @port = hash[:port] if hash[:port] != nil
@@ -139,40 +188,53 @@ class ModeGate
   end
 
   def check_connecting
-    cli=nil
+    cli={}
     begin
-      cli = @server.accept_nonblock
+      cli[:net] = @server.accept_nonblock
     rescue  IO::WaitReadable, Errno::EINTR
       return
     end
     @clients += [cli]
-    puts "on loop #{cli.inspect}"
-    puts "socket  : #{cli[0].inspect}"
-    puts "addrinfo: #{cli[1].inspect}"
+    puts "on loop #{cli[:net].inspect}"
+    puts "socket  : #{cli[:net][0].inspect}"
+    puts "addrinfo: #{cli[:net][1].inspect}"
     #puts "on loop #{cli.inspect}"
   end
 
-  def command_parce(cmd)
-          puts "COMMAND: #{cmd}"
+  def command_parce(cli,cmd)
+	command=cmd.split[0]
+	args=cmd.split[1..-1]
+        puts "COMMAND: '#{command}', args: '#{args}'"
+	case command
+		when "ymlfile" 
+		   cli[:gui]=@parent.newcli(cli[:net], args)
+		when "action"
+		   cli[:gui].netaction(cli, args)
+		else
+		puts "CMD #{command} unsuported!"
+        end
   end
-
-  def bufferparser
+  def guiaction(cli, args)
+	puts "Guid action net: '#{cli.inspect}', args: '#{args}'"
+  end
+  def bufferparser(cli)
     while @cmdbody.scan("\n") != []
           i=@cmdbody.index("\n")
           cmd=@cmdbody[0..i]
           @cmdbody=@cmdbody[i+1..-1]
           #puts "LIST: #{list.inspect}"
-          command_parce(cmd)
+          command_parce(cli,cmd)
     end
   end
 
   def check_parsedata
-    @clients.each{ |cli,addr| 
+    @clients.each{ |obj|
+      cli,addr=obj[:net]
       #puts "Check data for #{addr}"
       begin
         readres = cli.recvfrom_nonblock(20)
         @cmdbody+=readres[0]
-        bufferparser
+        bufferparser(obj)
       #puts "Client #{cli} body: '#{@cmdbody}'"
       rescue Errno::EAGAIN
         #puts "No data"
@@ -180,42 +242,33 @@ class ModeGate
     }
   end
 
-  def exec
-    loop do
+  def iterate
       check_connecting
       check_parsedata
+  end
+
+  def exec
+    loop do
+      iterate
       sleep 0.1
     end
-    #  client = @server.accept
-    #  puts "xxx"
-    #  client.puts "GUI for sh model."
-    #  client.puts "And time server ;-) (time is #{Time.new})"
-    #end
   end
   def close
     puts "Close socket..."
     @server.close
   end
 end
-gate=nil
-  (3000..3010).each{ |i|
-begin
-    gate = ModeGate.new(:port=>i)
-    break
-rescue Exception => e
-  puts "EX: #{e}"
-  next
-end
-  }
+##########################################
 
-
+#app.exec
+cli = Clients.new
 begin
-  gate.exec
+  cli.exec
 rescue SignalException => e
   puts "SIGNAL"
 rescue Exception => e
   puts "EXCEPT #{e}"
 else
   puts "Close gate..."
-  gate.close
+  cli.close
 end
