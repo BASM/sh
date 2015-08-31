@@ -1,11 +1,10 @@
+#ifndef __SH_GENERIC_H__
+#define __SH_GENERIC_H__
 
 #ifdef __AVR_ARCH__
-#define icprintf(...)  printf(__VA_ARGS__)
+#include "generic_avr.h"
 #else
-#include <stdio.h>
-extern FILE* icstdout;
-//#define icprintf(...) if (icstdout!=NULL) fprintf(icstdout, __VA_ARGS__)
-#define icprintf(...) fprintf(icstdout, __VA_ARGS__)
+#include "generic_host.h"
 #endif
 
 
@@ -19,3 +18,5 @@ class STDIO {
   public:
     int setio(IO *io);
 };
+
+#endif // __SH_GENERIC_H__
