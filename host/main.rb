@@ -8,20 +8,40 @@ require 'socket'
 # * cli[:gui] -- GUI object
 # * cli[:net] -- network object
 
-def Flag(name, value, parent)
-  puts "Flag: #{name} -- #{value}"
-  if value==0
-    hello = Qt::Label.new("#{name} -- OFF", parent)
-  else
-    hello = Qt::Label.new("#{name} -- ON", parent)
-  end
-  hello.setFrameStyle(Qt::Frame::Box | Qt::Frame::Raised)
-  hello.show
+class Flag
+	def initialize(name, value, parent)
+		@xname=name
+		@stat=value
+		#@parent=parent
+
+		#@wgt = Qt::Label.new("#{@xname} -- XX", parent)
+		#setval(@stat)
+
+	  #@wgt.setFrameStyle(Qt::Frame::Box | Qt::Frame::Raised)
+		#@wgt.show
+	end
+
+	def setval(value)
+		if value==0 then clr
+		else             set
+		end
+	end
+
+	def set
+		@wgt.label="#{@xname} -- ON"
+	end
+
+	def clr
+		#puts @wgt.methods
+		@wgt.text="#{@xname} -- OFF"
+	end
+
+	def check
+	end
 end
 
 def UART(name, parent)
   Qt::TextEdit.new(name,parent);
-
 end
 
 
@@ -62,9 +82,55 @@ class Cmodel < Qt::Dialog
   def initialize(parent=nil)
     @net=0
     @buttonidlist={}
+
+		@objects={}
+		@objects["POUT"]={}
     super(parent)
 
   end
+
+	def getobject(args)
+		puts "START====="
+		#puts @objects
+		obj=@objects
+		#puts "YYYYYYYYY #{@objects}"
+		#puts "XXXXXXXXX #{obj}"
+		item=nil
+		drop=2
+		args.each{ |i|
+			puts "================================"
+      if drop!=0
+				drop-=1
+			else
+				#puts "OBJ #{obj}"
+ 			end
+
+			next if i == "--"
+			item=i
+			begin
+				obj=obj[i]
+			rescue
+			 	#puts "OBJS #{obj} is bad" 
+			end
+			if obj==nil
+				#puts "Bad object '#{obj}'"
+				break
+			end
+		}
+		#puts "#{@objects}"
+		#puts "EXIT+======="
+		obj
+	end
+
+	def netaction(cli, args)
+		puts "Action for: #{cli} args '#{args}'"
+		#act=args[-1]
+         
+		obj=getobject(args[0...-1])
+		puts "#{@objects}"
+		#obj
+
+	end
 
   def loadyml(path)
     puts "Try to load #{path}"
@@ -76,9 +142,8 @@ class Cmodel < Qt::Dialog
 
     puts "RESULT #{sw["PIOS"]}"
 
-    @bmapper = Qt::SignalMapper.new(self)
-    connect(@bmapper, SIGNAL('mapped(int)'), self, SLOT('bclick(int)'))
-
+    @bmapper = Qt::SignalMapper.new(self) 
+		connect(@bmapper, SIGNAL('mapped(int)'), self, SLOT('bclick(int)'))
 
     mainslider      = Qt::Splitter.new(Qt::Vertical)
     mainslider.show
@@ -96,15 +161,18 @@ class Cmodel < Qt::Dialog
           Button("#{name}:#{a}-#{b}", slider)
         }
       when "POUT"
+				puts "POUTTTT= name: #{name}"
         slider= MakeSlider(topslider)
         puts a.inspect
         if a["PIN"] != nil
-          Flag("#{name}:#{a["PIN"]}",0, slider)
+ 					@objects["POUT"][name]={}
+					@objects["POUT"][name][a["PIN"]]=Flag.new("#{name}:#{a["PIN"]}",0, slider)
         else
-          a["PINS"].each{ |a,b|
-            Flag("#{name}:#{a}-#{b}",0, slider)
-          }
+ 					@objects["POUT"][name]={}
+					a["PINS"].map{ |a,b| @objects["POUT"][name][a]=Flag.new("#{name}:#{a}-#{b}",0, slider)   }
         end
+				puts "POUT RESULT:"
+				#puts @poutlist.inspect
       when "UART"
         slider= MakeSlider(bottomslider)
         puts "New UART wname: #{name}"
@@ -204,14 +272,16 @@ class ModeGate
   def command_parce(cli,cmd)
 	command=cmd.split[0]
 	args=cmd.split[1..-1]
-        puts "COMMAND: '#{command}', args: '#{args}'"
+        #puts "COMMAND: '#{command}', args: '#{args}'"
 	case command
 		when "ymlfile" 
 		   cli[:gui]=@parent.newcli(cli[:net], args)
 		when "action"
-		   cli[:gui].netaction(cli, args)
+			puts "#{@objects}"
+		   cli[:gui].netaction(cli[:net], args)
+			puts "#{@objects}"
 		else
-		puts "CMD #{command} unsuported!"
+		#puts "CMD #{command} unsuported!"
         end
   end
   def guiaction(cli, args)
@@ -268,6 +338,7 @@ rescue SignalException => e
   puts "SIGNAL"
 rescue Exception => e
   puts "EXCEPT #{e}"
+	raise
 else
   puts "Close gate..."
   cli.close

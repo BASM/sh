@@ -9,4 +9,6 @@ class Gui {
     Gui() {}
     int con();
     int usefile(std::string fname);
+		int action(std::string object, std::string event);
 };
+extern Gui *gui;

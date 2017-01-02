@@ -115,12 +115,24 @@ int Gui::usefile(std::string fname) {
       if (res != (int) str.size() ) {
         printf("Error to send command\n");
       }
-      str = "test1\ntest2\ntest3\n";
-      res = write(sock, str.c_str(), str.size());
-      if (res != (int) str.size() ) {
-        printf("Error to send command\n");
-      }
       return 0;
+}
+
+int Gui::action(std::string object, std::string action) {
+	int            res;
+	std::string    str;
+
+	str+="action ";
+	str+=object + " ";
+	str+=action;
+	str+="\n";
+
+	res = write(sock, str.c_str(), str.size());
+	if (res != (int) str.size() ) {
+		printf("Error to send command\n");
+		printf("res is: %i\n", res);
+	}
+	return 0;
 }
 
 void
